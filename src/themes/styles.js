@@ -76,4 +76,25 @@ export const globalStyles = StyleSheet.create({
     resizeMode: "contain",
     marginBottom: 24,
   },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    padding: 24,
+    marginHorizontal: 24,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalMessage: {
+    fontSize: 16,
+    marginBottom: 16,
+  },
+  modalClose: {
+    fontSize: 16,
+    color: "#007BFF",
+  },
 });

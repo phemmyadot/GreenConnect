@@ -9,12 +9,30 @@ import {
 } from "react-native";
 import { globalStyles } from "../../themes/styles";
 import Overlay from "../../components/Overlay";
+import { Auth } from "aws-amplify";
+import ErrorModal from "../../components/Error";
+import Loader from "../../components/Loader";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const handleForgotPassword = () => {
-    // Add logic to handle forgot password
+  const handleForgotPassword = async () => {
+    setLoading(true);
+    try {
+      await Auth.forgotPassword(email);
+      console.log("Reset code sent successfully");
+      navigation.navigate("Login");
+      // Add logic to navigate to the reset password screen
+    } catch (error) {
+      // Handle login error
+      setError(error.message);
+      setModalVisible(true); // Show the error modal
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -46,6 +64,12 @@ const ForgotPasswordScreen = ({ navigation }) => {
             <Text style={[globalStyles.linkText]}>Login</Text>
           </TouchableOpacity>
         </View>
+        {loading && <Loader />}
+        <ErrorModal
+          visible={modalVisible}
+          message={error}
+          onClose={() => setModalVisible(false)}
+        />
       </View>
     </ImageBackground>
   );

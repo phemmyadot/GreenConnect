@@ -9,12 +9,27 @@ import {
 } from "react-native";
 import { globalStyles } from "../../themes/styles";
 import Overlay from "../../components/Overlay";
+import { Auth } from "aws-amplify";
+import ErrorModal from "../../components/Error";
+import Loader from "../../components/Loader";
 
 const VerifyEmailScreen = ({ navigation }) => {
   const [verificationCode, setVerificationCode] = useState("");
 
-  const handleVerifyEmail = () => {
-    // Add logic to handle email verification
+  const handleVerifyEmail = async () => {
+    setLoading(true);
+    try {
+      const data = await Auth.confirmSignUp(email, verificationCode);
+      console.log("User verified:", data);
+      navigation.navigate("Login");
+      // Add logic to navigate to the login screen after successful verification
+    } catch (error) {
+      // Handle login error
+      setError(error.message);
+      setModalVisible(true); // Show the error modal
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -40,6 +55,12 @@ const VerifyEmailScreen = ({ navigation }) => {
         >
           <Text style={globalStyles.buttonText}>Verify Email</Text>
         </TouchableOpacity>
+        {loading && <Loader />}
+        <ErrorModal
+          visible={modalVisible}
+          message={error}
+          onClose={() => setModalVisible(false)}
+        />
       </View>
     </ImageBackground>
   );

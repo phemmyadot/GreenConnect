@@ -9,15 +9,35 @@ import {
 } from "react-native";
 import { globalStyles } from "../../themes/styles";
 import Overlay from "../../components/Overlay";
+import { Auth } from "aws-amplify";
+import ErrorModal from "../../components/Error";
+import Loader from "../../components/Loader";
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     // Add logic to handle user registration
-    navigation.navigate("Verify");
+    setLoading(true);
+    try {
+      const user = await Auth.signUp({
+        username: email,
+        password,
+      });
+      console.log("User registered:", user);
+      navigation.navigate("Verify");
+      // Add logic to navigate to the verification screen
+    } catch (error) {
+      // Handle login error
+      setError(error.message);
+      setModalVisible(true); // Show the error modal
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -30,12 +50,6 @@ const RegisterScreen = ({ navigation }) => {
         <Image
           source={require("../../../assets/logo.png")} // Import the logo
           style={globalStyles.logo} // Define logo styles
-        />
-        <TextInput
-          style={globalStyles.input}
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
         />
         <TextInput
           style={globalStyles.input}
@@ -59,6 +73,12 @@ const RegisterScreen = ({ navigation }) => {
             <Text style={[globalStyles.linkText]}>Login</Text>
           </TouchableOpacity>
         </View>
+        {loading && <Loader />}
+        <ErrorModal
+          visible={modalVisible}
+          message={error}
+          onClose={() => setModalVisible(false)}
+        />
       </View>
     </ImageBackground>
   );
