@@ -1,0 +1,2 @@
+# GreenConnect
+ GreenConnect - Empowering Farmers with Smart Agriculture  GreenConnect is a cross-platform mobile application built with React Native and powered by AWS services to revolutionize farming practices. It provides real-time weather updates, market insights, crop health alerts, and access to financial services, all in one intuitive platform.  Key Features: - Real-time Weather Forecasts - Market Price Updates - Crop Health Monitoring - Microloan Services - Blockchain-based Supply Chain Verification  Join us in creating a sustainable future for agriculture!
