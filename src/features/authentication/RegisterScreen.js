@@ -12,6 +12,7 @@ import Overlay from "../../components/Overlay";
 import { Auth } from "aws-amplify";
 import ErrorModal from "../../components/Error";
 import Loader from "../../components/Loader";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -24,12 +25,17 @@ const RegisterScreen = ({ navigation }) => {
     // Add logic to handle user registration
     setLoading(true);
     try {
-      const user = await Auth.signUp({
+      console.log("User registered:", email, password);
+      await Auth.signUp({
         username: email,
         password,
+        attributes: {
+          email, // optional
+          // other custom attributes here
+        },
       });
-      console.log("User registered:", user);
-      navigation.navigate("Verify");
+      await AsyncStorage.setItem("email", email);
+      navigation.navigate("VerifyEmail");
       // Add logic to navigate to the verification screen
     } catch (error) {
       // Handle login error

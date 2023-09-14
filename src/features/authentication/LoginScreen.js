@@ -27,7 +27,6 @@ const LoginScreen = ({ navigation }) => {
       // Add logic to navigate to the next screen after successful login
       const user = await Auth.signIn(email, password);
       console.log("User logged in:", user);
-      navigation.navigate("Dashboard");
     } catch (error) {
       // Handle login error
       setError(error.message);

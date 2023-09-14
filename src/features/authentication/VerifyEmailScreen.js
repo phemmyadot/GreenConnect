@@ -12,13 +12,18 @@ import Overlay from "../../components/Overlay";
 import { Auth } from "aws-amplify";
 import ErrorModal from "../../components/Error";
 import Loader from "../../components/Loader";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const VerifyEmailScreen = ({ navigation }) => {
   const [verificationCode, setVerificationCode] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleVerifyEmail = async () => {
     setLoading(true);
     try {
+      const email = await AsyncStorage.getItem("email");
       const data = await Auth.confirmSignUp(email, verificationCode);
       console.log("User verified:", data);
       navigation.navigate("Login");
