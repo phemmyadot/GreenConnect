@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-greenconnect-dev-221831-authRole",
+      "UnauthRoleArn": "arn:aws:iam::757063593356:role/amplify-greenconnect-dev-221831-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::757063593356:role/amplify-greenconnect-dev-221831-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-greenconnect-dev-221831-deployment",
+      "UnauthRoleName": "amplify-greenconnect-dev-221831-unauthRole",
+      "StackName": "amplify-greenconnect-dev-221831",
+      "StackId": "arn:aws:cloudformation:us-east-1:757063593356:stack/amplify-greenconnect-dev-221831/62bf5430-52ad-11ee-9624-0e307197a2b9",
+      "AmplifyAppId": "d1m78xij3724gk"
+    },
+    "categories": {
+      "auth": {
+        "greenconnectc1c536b0": {}
+      }
+    }
+  }
+}
