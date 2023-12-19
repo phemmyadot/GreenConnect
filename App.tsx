@@ -8,9 +8,16 @@ import awsconfig from "./src/aws-exports";
 import ProtectedStack from "./src/navigation/ProtectedStack";
 import { Provider } from "react-redux";
 import { store } from "./src/features/app/store";
+import { HubCallback } from "@aws-amplify/core/lib/Hub";
 
 Amplify.configure(awsconfig);
-const Stack = createStackNavigator();
+
+type RootStackParamList = {
+  ProtectedStack: undefined;
+  AuthStack: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({

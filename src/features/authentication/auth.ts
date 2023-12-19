@@ -30,9 +30,13 @@ class AuthProvider {
     return await this.authService.signOut();
   }
 
-  async changePassword(user: any, oldPassword: string, newPassword: string) {
+  async changePassword(
+    username: string,
+    oldPassword: string,
+    newPassword: string
+  ) {
     return await this.authService.forgotPasswordSubmit(
-      user,
+      username,
       oldPassword,
       newPassword
     );

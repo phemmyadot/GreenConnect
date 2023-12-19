@@ -12,10 +12,12 @@ import Overlay from "../../components/Overlay";
 
 import ErrorModal from "../../components/Error";
 import Loader from "../../components/Loader";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import authProvider from "./auth";
+import { StackScreenProps } from "@react-navigation/stack";
+import { AuthStackParamList } from "../../navigation/AuthStack";
 
-const RegisterScreen = ({ navigation }: any) => {
+type Props = StackScreenProps<AuthStackParamList, "Register">;
+const RegisterScreen = ({ navigation }: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,8 +30,7 @@ const RegisterScreen = ({ navigation }: any) => {
     try {
       console.log("User registered:", email, password);
       await authProvider.signUp(email, password);
-      await AsyncStorage.setItem("email", email);
-      navigation.navigate("VerifyEmail");
+      navigation.navigate("VerifyEmail", { email: email });
       // Add logic to navigate to the verification screen
     } catch (error) {
       // Handle login error

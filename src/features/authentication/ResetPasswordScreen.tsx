@@ -9,12 +9,15 @@ import {
 } from "react-native";
 import { globalStyles } from "../../themes/styles";
 import authProvider from "./auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Overlay from "../../components/Overlay";
 import ErrorModal from "../../components/Error";
 import Loader from "../../components/Loader";
+import { StackScreenProps } from "@react-navigation/stack";
+import { AuthStackParamList } from "../../navigation/AuthStack";
 
-const ResetPasswordScreen = () => {
+type Props = StackScreenProps<AuthStackParamList, "ResetPassword">;
+
+const ResetPasswordScreen = ({ navigation, route }: Props) => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
@@ -33,11 +36,13 @@ const ResetPasswordScreen = () => {
         Alert.alert("Error", "Passwords do not match");
         return;
       }
-      const email = await AsyncStorage.getItem("email");
+
+      const email = route.params?.email;
       if (!email) {
         throw new Error("Email not found");
       }
       authProvider.forgotPasswordSubmit(email, verificationCode, newPassword);
+      navigation.navigate("Login");
     } catch (error) {
       // Handle login error
       // @ts-expect-error TS(2571): Object is of type 'unknown'.
@@ -54,7 +59,7 @@ const ResetPasswordScreen = () => {
       style={[globalStyles.backgroundImage, globalStyles.container]}
     >
       <Overlay />
-      <View style={globalStyles.container}>
+      <View style={globalStyles.content}>
         <TextInput
           style={globalStyles.input}
           placeholder="Verification Code"

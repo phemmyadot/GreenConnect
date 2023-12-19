@@ -6,7 +6,14 @@ import ForgotPasswordScreen from "../features/authentication/ForgotPasswordScree
 import VerifyEmailScreen from "../features/authentication/VerifyEmailScreen";
 import ResetPasswordScreen from "../features/authentication/ResetPasswordScreen";
 
-const Stack = createStackNavigator();
+export type AuthStackParamList = {
+  Login: undefined;
+  Register: undefined;
+  ForgotPassword: undefined;
+  VerifyEmail: { email: string };
+  ResetPassword: { email: string };
+};
+const Stack = createStackNavigator<AuthStackParamList>();
 
 const AuthStack = () => {
   return (
@@ -14,8 +21,16 @@ const AuthStack = () => {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-      <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen} />
-      <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+      <Stack.Screen
+        name="VerifyEmail"
+        component={VerifyEmailScreen}
+        initialParams={{ email: "user.email" }}
+      />
+      <Stack.Screen
+        name="ResetPassword"
+        component={ResetPasswordScreen}
+        initialParams={{ email: "user.email" }}
+      />
     </Stack.Navigator>
   );
 };

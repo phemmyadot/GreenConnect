@@ -12,8 +12,11 @@ import Overlay from "../../components/Overlay";
 import authProvider from "./auth";
 import ErrorModal from "../../components/Error";
 import Loader from "../../components/Loader";
+import { StackScreenProps } from "@react-navigation/stack";
+import { AuthStackParamList } from "../../navigation/AuthStack";
 
-const LoginScreen = ({ navigation }: any) => {
+type Props = StackScreenProps<AuthStackParamList, "Login">;
+const LoginScreen = ({ navigation }: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

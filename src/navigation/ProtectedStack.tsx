@@ -1,7 +1,11 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import DashboardScreen from "../screens/DashboardScreen";
 
-const Stack = createStackNavigator();
+type ProtectedStackParamList = {
+  Dashboard: undefined;
+};
+
+const Stack = createStackNavigator<ProtectedStackParamList>();
 
 const ProtectedStack = () => {
   return (

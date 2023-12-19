@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { CognitoUser } from "amazon-cognito-identity-js";
 
 interface AuthState {
-  user: any;
+  user: CognitoUser | null;
   isLoading: boolean;
   error: string | null;
 }

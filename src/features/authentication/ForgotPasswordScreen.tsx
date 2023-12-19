@@ -12,8 +12,11 @@ import Overlay from "../../components/Overlay";
 import authProvider from "./auth";
 import ErrorModal from "../../components/Error";
 import Loader from "../../components/Loader";
+import { StackScreenProps } from "@react-navigation/stack";
+import { AuthStackParamList } from "../../navigation/AuthStack";
 
-const ForgotPasswordScreen = ({ navigation }: any) => {
+type Props = StackScreenProps<AuthStackParamList, "ForgotPassword">;
+const ForgotPasswordScreen = ({ navigation }: Props) => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,7 +27,7 @@ const ForgotPasswordScreen = ({ navigation }: any) => {
     try {
       await authProvider.forgotPassword(email);
       console.log("Reset code sent successfully");
-      navigation.navigate("Login");
+      navigation.navigate("ResetPassword", { email: email });
       // Add logic to navigate to the reset password screen
     } catch (error) {
       // Handle login error

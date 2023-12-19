@@ -11,10 +11,12 @@ import { globalStyles } from "../../themes/styles";
 import Overlay from "../../components/Overlay";
 import ErrorModal from "../../components/Error";
 import Loader from "../../components/Loader";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import authProvider from "./auth";
+import { StackScreenProps } from "@react-navigation/stack";
+import { AuthStackParamList } from "../../navigation/AuthStack";
 
-const VerifyEmailScreen = ({ navigation }: any) => {
+type Props = StackScreenProps<AuthStackParamList, "VerifyEmail">;
+const VerifyEmailScreen = ({ navigation, route }: Props) => {
   const [verificationCode, setVerificationCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,7 +25,7 @@ const VerifyEmailScreen = ({ navigation }: any) => {
   const handleVerifyEmail = async () => {
     setLoading(true);
     try {
-      const email = await AsyncStorage.getItem("email");
+      const email = route.params?.email;
       if (!email) {
         throw new Error("Email not found");
       }
