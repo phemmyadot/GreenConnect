@@ -41,18 +41,14 @@ const RegisterScreen = ({ navigation }: Props) => {
   const [emailValid, setEmailValid] = useState<boolean | null>(null);
 
   const handleRegister = async () => {
-    // Add logic to handle user registration
     setLoading(true);
     try {
       console.log("User registered:", email, password);
       await authProvider.signUp(email, password, fullName);
       navigation.navigate("VerifyEmail", { email: email });
-      // Add logic to navigate to the verification screen
-    } catch (error) {
-      // Handle login error
-      // @ts-expect-error TS(2571): Object is of type 'unknown'.
+    } catch (error: Error | any) {
       setError(error.message);
-      setModalVisible(true); // Show the error modal
+      setModalVisible(true);
     } finally {
       setLoading(false);
     }
