@@ -68,16 +68,16 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Provider store={store}>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {user ? (
-            <Stack.Screen name="ProtectedStack" component={ProtectedStack} />
-          ) : (
-            <Stack.Screen name="AuthStack" component={AuthStack} />
-          )}
-          {/* Add more screens here if needed */}
-        </Stack.Navigator>
-      </Provider>
+      {/* <Provider store={store}> */}
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {user ? (
+          <Stack.Screen name="ProtectedStack" component={ProtectedStack} />
+        ) : (
+          <Stack.Screen name="AuthStack" component={AuthStack} />
+        )}
+        {/* Add more screens here if needed */}
+      </Stack.Navigator>
+      {/* </Provider> */}
     </NavigationContainer>
   );
 }

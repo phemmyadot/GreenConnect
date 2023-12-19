@@ -14,6 +14,7 @@ import ErrorModal from "../../components/Error";
 import Loader from "../../components/Loader";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../../navigation/AuthStack";
+import { PrimaryButton } from "../../components/Buttons";
 
 type Props = StackScreenProps<AuthStackParamList, "ResetPassword">;
 
@@ -81,12 +82,11 @@ const ResetPasswordScreen = ({ navigation, route }: Props) => {
           value={confirmNewPassword}
           onChangeText={setConfirmNewPassword}
         />
-        <TouchableOpacity
-          style={globalStyles.button}
-          onPress={handleResetPassword}
-        >
-          <Text style={globalStyles.buttonText}>Reset Password</Text>
-        </TouchableOpacity>
+        <PrimaryButton
+          text="Reset Password"
+          onPressed={handleResetPassword}
+        ></PrimaryButton>
+
         {loading && <Loader />}
         <ErrorModal
           visible={modalVisible}

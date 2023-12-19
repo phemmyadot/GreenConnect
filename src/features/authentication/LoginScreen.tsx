@@ -14,6 +14,7 @@ import ErrorModal from "../../components/Error";
 import Loader from "../../components/Loader";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../../navigation/AuthStack";
+import { PrimaryButton } from "../../components/Buttons";
 
 type Props = StackScreenProps<AuthStackParamList, "Login">;
 const LoginScreen = ({ navigation }: Props) => {
@@ -64,9 +65,7 @@ const LoginScreen = ({ navigation }: Props) => {
           value={password}
           onChangeText={setPassword}
         />
-        <TouchableOpacity style={globalStyles.button} onPress={handleLogin}>
-          <Text style={globalStyles.buttonText}>Login</Text>
-        </TouchableOpacity>
+        <PrimaryButton text="Login" onPressed={handleLogin}></PrimaryButton>
         <View style={globalStyles.linksContainer}>
           <TouchableOpacity onPress={() => navigation.navigate("Register")}>
             <Text style={globalStyles.linkText}>Register</Text>

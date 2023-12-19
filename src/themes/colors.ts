@@ -5,4 +5,6 @@ export const colors = {
   text: "#333333", // Dark text color
   accent: "#FF5722", // Accent color for highlights or alerts
   white: "#FFFFFF", // White color
+  disabled: "#929496", // Disabled color for buttons or text
+  error: "#FF0000", // Error color for alerts
 };

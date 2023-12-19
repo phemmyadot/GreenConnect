@@ -54,11 +54,16 @@ export const globalStyles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 16,
     width: "100%",
+    elevation: 3,
   },
   // @ts-expect-error TS(2322): Type '{ color: string; fontFamily: string; fontSiz... Remove this comment to see the full error message
   buttonText: {
     ...fonts.mainText,
     color: colors.white,
+  },
+  disabledButton: {
+    backgroundColor: colors.disabled,
+    elevation: 0,
   },
   input: {
     borderColor: colors.primary,
@@ -95,5 +100,11 @@ export const globalStyles = StyleSheet.create({
   modalClose: {
     fontSize: 16,
     color: "#007BFF",
+  },
+  errorText: {
+    color: colors.error,
+    fontSize: 12,
+    marginBottom: 12,
+    alignSelf: "flex-start",
   },
 });

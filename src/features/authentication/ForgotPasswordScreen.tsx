@@ -14,6 +14,7 @@ import ErrorModal from "../../components/Error";
 import Loader from "../../components/Loader";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../../navigation/AuthStack";
+import { PrimaryButton } from "../../components/Buttons";
 
 type Props = StackScreenProps<AuthStackParamList, "ForgotPassword">;
 const ForgotPasswordScreen = ({ navigation }: Props) => {
@@ -57,12 +58,10 @@ const ForgotPasswordScreen = ({ navigation }: Props) => {
           value={email}
           onChangeText={setEmail}
         />
-        <TouchableOpacity
-          style={globalStyles.button}
-          onPress={handleForgotPassword}
-        >
-          <Text style={globalStyles.buttonText}>Send Reset Email</Text>
-        </TouchableOpacity>
+        <PrimaryButton
+          text="Reset Password"
+          onPressed={handleForgotPassword}
+        ></PrimaryButton>
         <View style={globalStyles.linksContainer}>
           <Text style={globalStyles.linkText}>Remember your password?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>

@@ -14,6 +14,7 @@ import Loader from "../../components/Loader";
 import authProvider from "./auth";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../../navigation/AuthStack";
+import { PrimaryButton } from "../../components/Buttons";
 
 type Props = StackScreenProps<AuthStackParamList, "VerifyEmail">;
 const VerifyEmailScreen = ({ navigation, route }: Props) => {
@@ -61,12 +62,8 @@ const VerifyEmailScreen = ({ navigation, route }: Props) => {
           value={verificationCode}
           onChangeText={setVerificationCode}
         />
-        <TouchableOpacity
-          style={globalStyles.button}
-          onPress={handleVerifyEmail}
-        >
-          <Text style={globalStyles.buttonText}>Verify Email</Text>
-        </TouchableOpacity>
+        <PrimaryButton text="Verify Email" onPressed={handleVerifyEmail} />
+
         {loading && <Loader />}
         <ErrorModal
           visible={modalVisible}
