@@ -39,14 +39,7 @@ export class MockCognitoUser extends CognitoUser {
         getUserPoolName: function (): string {
           throw new Error("Function not implemented.");
         },
-        signUp: function (
-          username: string,
-          password: string,
-          userAttributes: CognitoUserAttribute[],
-          validationData: CognitoUserAttribute[],
-          callback: NodeCallback<Error, ISignUpResult>,
-          clientMetadata?: ClientMetadata
-        ): void {
+        signUp: function (): void {
           throw new Error("Function not implemented.");
         },
         getCurrentUser: function (): CognitoUser | null {
@@ -55,22 +48,6 @@ export class MockCognitoUser extends CognitoUser {
       },
     });
   }
-  // user: {
-  //   email: string;
-  // };
-  // confirmed: boolean;
-  // constructor(email: string) {
-  //   this.user = {
-  //     email,
-  //   };
-  //   this.confirmed = false;
-  // }
-  // public resendConfirmationCode(callback: Callback) {
-  //   // Simulate behavior of resendConfirmationCode
-  //   setTimeout(() => {
-  //     callback(null); // Return the code in the callback
-  //   }, 100);
-  // }
 }
 
 const createAndThrowError = (code: string, message: string) => {

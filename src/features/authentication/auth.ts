@@ -12,12 +12,13 @@ class AuthProvider {
     return await this.authService.signIn(username, password);
   }
 
-  async signUp(username: string, password: string) {
+  async signUp(username: string, password: string, fullName: string) {
     return await this.authService.signUp({
       username,
       password,
       attributes: {
         email: username,
+        name: fullName,
       },
     });
   }

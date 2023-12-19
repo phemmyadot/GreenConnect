@@ -18,6 +18,7 @@ import { AuthStackParamList } from "../../navigation/AuthStack";
 
 type Props = StackScreenProps<AuthStackParamList, "Register">;
 const RegisterScreen = ({ navigation }: Props) => {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -29,7 +30,7 @@ const RegisterScreen = ({ navigation }: Props) => {
     setLoading(true);
     try {
       console.log("User registered:", email, password);
-      await authProvider.signUp(email, password);
+      await authProvider.signUp(email, password, fullName);
       navigation.navigate("VerifyEmail", { email: email });
       // Add logic to navigate to the verification screen
     } catch (error) {
@@ -53,6 +54,12 @@ const RegisterScreen = ({ navigation }: Props) => {
           source={require("../../../assets/logo.png")} // Import the logo
           // @ts-expect-error TS(2769): No overload matches this call.
           style={globalStyles.logo} // Define logo styles
+        />
+        <TextInput
+          style={globalStyles.input}
+          placeholder="Full Name"
+          value={fullName}
+          onChangeText={setFullName}
         />
         <TextInput
           style={globalStyles.input}
