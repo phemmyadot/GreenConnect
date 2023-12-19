@@ -1,6 +1,3 @@
-// DashboardScreen.js
-
-import { Auth } from "aws-amplify";
 import React from "react";
 import { View, Text } from "react-native";
 

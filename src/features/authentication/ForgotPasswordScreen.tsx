@@ -9,11 +9,11 @@ import {
 } from "react-native";
 import { globalStyles } from "../../themes/styles";
 import Overlay from "../../components/Overlay";
-import { Auth } from "aws-amplify";
+import authProvider from "./auth";
 import ErrorModal from "../../components/Error";
 import Loader from "../../components/Loader";
 
-const ForgotPasswordScreen = ({ navigation }) => {
+const ForgotPasswordScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,12 +22,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
   const handleForgotPassword = async () => {
     setLoading(true);
     try {
-      await Auth.forgotPassword(email);
+      await authProvider.forgotPassword(email);
       console.log("Reset code sent successfully");
       navigation.navigate("Login");
       // Add logic to navigate to the reset password screen
     } catch (error) {
       // Handle login error
+      // @ts-expect-error TS(2571): Object is of type 'unknown'.
       setError(error.message);
       setModalVisible(true); // Show the error modal
     } finally {
@@ -38,12 +39,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
   return (
     <ImageBackground
       source={require("../../../assets/images/background.jpg")} // Provide the path to your background image
-      style={globalStyles.backgroundImage}
+      style={[globalStyles.backgroundImage, globalStyles.container]}
     >
       <Overlay />
       <View style={globalStyles.content}>
         <Image
           source={require("../../../assets/logo.png")} // Import the logo
+          // @ts-expect-error TS(2769): No overload matches this call.
           style={globalStyles.logo} // Define logo styles
         />
         <TextInput

@@ -9,11 +9,11 @@ import {
 } from "react-native";
 import { globalStyles } from "../../themes/styles";
 import Overlay from "../../components/Overlay";
-import { Auth } from "aws-amplify";
+import authProvider from "./auth";
 import ErrorModal from "../../components/Error";
 import Loader from "../../components/Loader";
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -25,9 +25,9 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
     try {
       // Add logic to navigate to the next screen after successful login
-      const user = await Auth.signIn(email, password);
+      const user = await authProvider.signIn(email, password);
       console.log("User logged in:", user);
-    } catch (error) {
+    } catch (error: Error | any) {
       // Handle login error
       setError(error.message);
       setModalVisible(true); // Show the error modal
@@ -39,12 +39,13 @@ const LoginScreen = ({ navigation }) => {
   return (
     <ImageBackground
       source={require("../../../assets/images/background.jpg")} // Provide the path to your background image
-      style={globalStyles.backgroundImage}
+      style={[globalStyles.backgroundImage, globalStyles.container]}
     >
       <Overlay />
       <View style={globalStyles.content}>
         <Image
           source={require("../../../assets/logo.png")} // Import the logo
+          // @ts-expect-error TS(2769): No overload matches this call.
           style={globalStyles.logo} // Define logo styles
         />
         <TextInput

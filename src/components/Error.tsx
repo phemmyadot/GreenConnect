@@ -1,10 +1,8 @@
-// ErrorModal.js
-
 import React from "react";
 import { View, Text, Modal, TouchableOpacity } from "react-native";
 import { globalStyles } from "../themes/styles";
 
-const ErrorModal = ({ visible, message, onClose }) => {
+const ErrorModal = ({ visible, message, onClose }: any) => {
   return (
     <Modal transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={globalStyles.modalContainer}>

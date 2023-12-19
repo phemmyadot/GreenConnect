@@ -5,8 +5,9 @@ import AuthStack from "./src/navigation/AuthStack"; // Create this file to handl
 import { useFonts } from "expo-font";
 import { Amplify, Auth, Hub } from "aws-amplify";
 import awsconfig from "./src/aws-exports";
-import Overlay from "./src/components/Overlay";
 import ProtectedStack from "./src/navigation/ProtectedStack";
+import { Provider } from "react-redux";
+import { store } from "./src/features/app/store";
 
 Amplify.configure(awsconfig);
 const Stack = createStackNavigator();
@@ -33,7 +34,7 @@ export default function App() {
 
     checkAuthState(); // Check authentication state on app load
 
-    const listener = (data) => {
+    const listener = (data: any) => {
       switch (data.payload.event) {
         case "signIn":
         case "signUp":
@@ -60,14 +61,16 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {user ? (
-          <Stack.Screen name="ProtectedStack" component={ProtectedStack} />
-        ) : (
-          <Stack.Screen name="AuthStack" component={AuthStack} />
-        )}
-        {/* Add more screens here if needed */}
-      </Stack.Navigator>
+      <Provider store={store}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {user ? (
+            <Stack.Screen name="ProtectedStack" component={ProtectedStack} />
+          ) : (
+            <Stack.Screen name="AuthStack" component={AuthStack} />
+          )}
+          {/* Add more screens here if needed */}
+        </Stack.Navigator>
+      </Provider>
     </NavigationContainer>
   );
 }

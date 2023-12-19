@@ -9,12 +9,12 @@ import {
 } from "react-native";
 import { globalStyles } from "../../themes/styles";
 import Overlay from "../../components/Overlay";
-import { Auth } from "aws-amplify";
 import ErrorModal from "../../components/Error";
 import Loader from "../../components/Loader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import authProvider from "./auth";
 
-const VerifyEmailScreen = ({ navigation }) => {
+const VerifyEmailScreen = ({ navigation }: any) => {
   const [verificationCode, setVerificationCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,12 +24,16 @@ const VerifyEmailScreen = ({ navigation }) => {
     setLoading(true);
     try {
       const email = await AsyncStorage.getItem("email");
-      const data = await Auth.confirmSignUp(email, verificationCode);
+      if (!email) {
+        throw new Error("Email not found");
+      }
+      const data = await authProvider.confirmSignUp(email, verificationCode);
       console.log("User verified:", data);
       navigation.navigate("Login");
       // Add logic to navigate to the login screen after successful verification
     } catch (error) {
       // Handle login error
+      // @ts-expect-error TS(2571): Object is of type 'unknown'.
       setError(error.message);
       setModalVisible(true); // Show the error modal
     } finally {
@@ -40,12 +44,13 @@ const VerifyEmailScreen = ({ navigation }) => {
   return (
     <ImageBackground
       source={require("../../../assets/images/background.jpg")} // Provide the path to your background image
-      style={globalStyles.backgroundImage}
+      style={[globalStyles.backgroundImage, globalStyles.container]}
     >
       <Overlay />
       <View style={globalStyles.content}>
         <Image
           source={require("../../../assets/logo.png")} // Import the logo
+          // @ts-expect-error TS(2769): No overload matches this call.
           style={globalStyles.logo} // Define logo styles
         />
         <TextInput

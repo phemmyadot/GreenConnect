@@ -5,16 +5,13 @@ import { fonts } from "./fonts";
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
-    paddingHorizontal: 16,
-    paddingVertical: 24,
-    alignItems: "center",
-    justifyContent: "center",
+    paddingHorizontal: 32,
+    paddingVertical: 32,
   },
   backgroundImage: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 24,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -43,6 +40,7 @@ export const globalStyles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 16,
   },
+  // @ts-expect-error TS(2322): Type '{ color: string; fontFamily: string; fontSiz... Remove this comment to see the full error message
   text: {
     ...fonts.mainText,
     color: colors.text,
@@ -57,6 +55,7 @@ export const globalStyles = StyleSheet.create({
     marginTop: 16,
     width: "100%",
   },
+  // @ts-expect-error TS(2322): Type '{ color: string; fontFamily: string; fontSiz... Remove this comment to see the full error message
   buttonText: {
     ...fonts.mainText,
     color: colors.white,

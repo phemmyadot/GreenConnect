@@ -1,47 +1,113 @@
-export class MockCognitoUser {
-  constructor(email) {
-    this.user = {
-      email: email,
-    };
-    this.confirmed = false;
-  }
+import {
+  ClientMetadata,
+  CodeDeliveryDetails,
+  CognitoUser,
+  CognitoUserAttribute,
+  ISignUpResult,
+  NodeCallback,
+} from "amazon-cognito-identity-js";
 
-  resendConfirmationCode(callback) {
-    // Simulate behavior of resendConfirmationCode
-    setTimeout(() => {
-      callback(null); // Return the code in the callback
-    }, 100);
+interface MockError extends Error {
+  code: string;
+}
+
+export class SignUpResult implements ISignUpResult {
+  user: MockCognitoUser;
+  userConfirmed: boolean;
+  userSub: string;
+  codeDeliveryDetails: CodeDeliveryDetails;
+
+  constructor(user: MockCognitoUser) {
+    this.user = user;
+    this.userConfirmed = false;
+    this.userSub = user.getUsername();
+    this.codeDeliveryDetails = {
+      AttributeName: "email",
+      DeliveryMedium: "EMAIL",
+      Destination: user.getUsername(),
+    };
   }
 }
 
-function createAndThrowError(code, message) {
-  const error = new Error(message);
+export class MockCognitoUser extends CognitoUser {
+  constructor(email: string) {
+    super({
+      Username: email,
+      Pool: {
+        getUserPoolId: () => "mock-user-pool-id",
+        getClientId: () => "mock-client-id",
+        getUserPoolName: function (): string {
+          throw new Error("Function not implemented.");
+        },
+        signUp: function (
+          username: string,
+          password: string,
+          userAttributes: CognitoUserAttribute[],
+          validationData: CognitoUserAttribute[],
+          callback: NodeCallback<Error, ISignUpResult>,
+          clientMetadata?: ClientMetadata
+        ): void {
+          throw new Error("Function not implemented.");
+        },
+        getCurrentUser: function (): CognitoUser | null {
+          throw new Error("Function not implemented.");
+        },
+      },
+    });
+  }
+  // user: {
+  //   email: string;
+  // };
+  // confirmed: boolean;
+  // constructor(email: string) {
+  //   this.user = {
+  //     email,
+  //   };
+  //   this.confirmed = false;
+  // }
+  // public resendConfirmationCode(callback: Callback) {
+  //   // Simulate behavior of resendConfirmationCode
+  //   setTimeout(() => {
+  //     callback(null); // Return the code in the callback
+  //   }, 100);
+  // }
+}
+
+const createAndThrowError = (code: string, message: string) => {
+  const error = new Error(message) as MockError;
   error.code = code;
   throw error;
+};
+
+interface MockUser {
+  email: string;
+  password: string;
+  confirmed: boolean;
+  verifyCode: string;
 }
 
-export let mockUsers = {
-  "validuser@rhaeos.com": {
-    email: "validuser@rhaeos.com",
+export let mockUsers: Record<string, MockUser> = {
+  "validuser@greenconnect.com": {
+    email: "validuser@greenconnect.com",
     password: "123456",
     confirmed: true,
     verifyCode: "123456",
   },
-  "unconfirmed@rhaeos.com": {
-    email: "unconfirmed@rhaeos.com",
+  "unconfirmed@greenconnect.com": {
+    email: "unconfirmed@greenconnect.com",
     password: "123456",
     confirmed: false,
     verifyCode: "123456",
   },
 };
 
-export let mockAuthUser = null;
+export let mockAuthUser: MockCognitoUser | null = null;
 
-export const resetAuthValues = () => {
+export const resetAuthValues = (): void => {
   mockAuthUser = null;
   mockUsers = {
-    "validuser@rhaeos.com": {
-      email: "validuser@rhaeos.com",
+    "validuser@greenconnect.com": {
+      email: "validuser@greenconnect.com",
       password: "123456",
       confirmed: true,
       verifyCode: "123456",
@@ -50,7 +116,15 @@ export const resetAuthValues = () => {
 };
 
 const MockAuthentication = {
-  signUp: async ({ username: email, password, attributes }) => {
+  signUp: async ({
+    username: email,
+    password,
+    attributes,
+  }: {
+    username: string;
+    password: string;
+    attributes: object;
+  }): Promise<ISignUpResult> => {
     email = email.toLowerCase().trim();
     if (mockUsers[email]) {
       createAndThrowError("UsernameExistsException", "User already exists");
@@ -67,10 +141,11 @@ const MockAuthentication = {
       confirmed: false,
       verifyCode: "123456",
     };
-    return new MockCognitoUser(email);
+    const res: ISignUpResult = new SignUpResult(new MockCognitoUser(email));
+    return res;
   },
 
-  signIn: async (email, password) => {
+  signIn: async (email: string, password: string): Promise<MockCognitoUser> => {
     email = email.toLowerCase().trim();
 
     const user = mockUsers[email];
@@ -80,34 +155,38 @@ const MockAuthentication = {
         "UserNotFoundException",
         "User not found. Please sign up."
       );
-    }
+    } else {
+      if (user.password !== password) {
+        createAndThrowError("NotAuthorizedException", "Incorrect password.");
+      }
 
-    if (user.password !== password) {
-      createAndThrowError("NotAuthorizedException", "Incorrect password.");
-    }
-
-    if (!user.confirmed) {
-      createAndThrowError(
-        "UserNotConfirmedException",
-        "User is not confirmed."
-      );
+      if (!user.confirmed) {
+        createAndThrowError(
+          "UserNotConfirmedException",
+          "User is not confirmed."
+        );
+      }
     }
 
     mockAuthUser = new MockCognitoUser(email);
     return mockAuthUser;
   },
 
-  currentAuthenticatedUser: async () => {
+  currentAuthenticatedUser: async (): Promise<MockCognitoUser | null> => {
     if (!mockAuthUser) {
       return null;
     }
     return mockAuthUser;
   },
 
-  signOut: async () => {
+  signOut: async (): Promise<void> => {
     resetAuthValues();
   },
-  forgotPasswordSubmit: async (email, code, newPassword) => {
+  forgotPasswordSubmit: async (
+    email: string,
+    code: string,
+    newPassword: string
+  ): Promise<string> => {
     email = email.toLowerCase().trim();
     const user = mockUsers[email];
 
@@ -117,14 +196,21 @@ const MockAuthentication = {
         "User not found. Please sign up."
       );
     }
-
-    if (mockUsers[email].verifyCode !== code) {
+    // Check if the provided verification code matches the stored one
+    if (mockUsers[email]?.verifyCode !== code) {
       throw new Error("Invalid verification code");
     }
 
-    mockUsers[email].password = newPassword;
+    // Simulate changing the password
+    if (mockUsers[email] !== undefined || mockUsers[email] !== null) {
+      mockUsers[email]!.password = newPassword;
+    }
+    return "";
   },
-  confirmSignUp: async (email, verificationCode) => {
+  confirmSignUp: async (
+    email: string,
+    verificationCode: string
+  ): Promise<void> => {
     email = email.toLowerCase().trim();
     const user = mockUsers[email];
 
@@ -134,14 +220,16 @@ const MockAuthentication = {
         "User not found. Please sign up."
       );
     }
-
-    if (mockUsers[email].verifyCode !== verificationCode) {
+    // Check if the provided verification code matches the stored one
+    if (mockUsers[email]?.verifyCode !== verificationCode) {
       throw new Error("Invalid verification code");
     }
-
-    mockUsers[email].confirmed = true;
+    // Simulate changing the password
+    if (mockUsers[email] !== undefined || mockUsers[email] !== null) {
+      mockUsers[email]!.confirmed = true;
+    }
   },
-  forgotPassword: async (email) => {
+  forgotPassword: async (email: string): Promise<any> => {
     email = email.toLowerCase().trim();
     const user = mockUsers[email];
 
@@ -151,10 +239,13 @@ const MockAuthentication = {
         "User not found. Please sign up."
       );
     }
-
-    const mockVerificationCode = "123456";
-    mockUsers[email].verifyCode = mockVerificationCode;
+    // Simulate generating a verification code
+    const mockVerificationCode = "123456"; // Replace with a dynamic generation if needed
+    if (mockUsers[email] !== undefined || mockUsers[email] !== null) {
+      mockUsers[email]!.verifyCode = mockVerificationCode;
+    }
+    return;
   },
 };
 
-module.exports = MockAuthentication;
+export default MockAuthentication;

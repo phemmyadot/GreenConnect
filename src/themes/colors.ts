@@ -1,5 +1,3 @@
-// colors.js
-
 export const colors = {
   primary: "#00A74A", // Green color for primary elements
   secondary: "#FFC107", // Yellow color for secondary elements
